@@ -6,13 +6,13 @@ const Contact = () => (
       <h2 className="text-3xl font-semibold mb-8">Mari Terhubung</h2>
       <div className="flex justify-center space-x-6">
         <a href="https://www.linkedin.com/in/rifki-syahada/" className="text-white hover:text-orange-500 transition-colors duration-300">
-          <i className="fab fa-linkedin fa-2x"></i>
+          <i className="fab fa-linkedin fa-3x"></i>
         </a>
         <a href="https://github.com/rifkisyhd" className="text-white hover:text-orange-500 transition-colors duration-300">
-          <i className="fab fa-github fa-2x"></i>
+          <i className="fab fa-github fa-3x"></i>
         </a>
         <a href="https://instagram.com/rifkisyhd_" className="text-white hover:text-orange-500 transition-colors duration-300">
-          <i className="fab fa-instagram fa-2x"></i>
+          <i className="fab fa-instagram fa-3x"></i>
         </a>
       </div>
     </div>

@@ -37,7 +37,7 @@ const About = () => {
             <h2 className="text-3xl text-center text-orange-500 font-semibold mb-4 mt-10">
                 Skill
             </h2>
-            <div className="flex justify-center text-orange-500 bg-white rounded-lg shadow-md p-4">
+            <div className="flex flex-wrap justify-center text-orange-500 bg-white rounded-lg shadow-md p-4 gap-6">
                 {[
                     "fa-figma",
                     "fa-html5",
@@ -46,7 +46,9 @@ const About = () => {
                     "fa-wordpress",
                     "fa-react",
                 ].map((icon, idx) => (
-                    <div className="mx-5" key={icon}>
+                    <div
+                        className="mx-2 my-2 flex justify-center items-center"
+                        key={icon}>
                         <i className={`fa-brands ${icon} fa-3x`}></i>
                     </div>
                 ))}
@@ -54,7 +56,7 @@ const About = () => {
             <h2 className="text-3xl text-center text-orange-500 font-semibold mb-4 mt-10">
                 Sertifikat
             </h2>
-            <div className="mx-auto flex flex-col gap-8">
+            <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
                 {sertifikat.map((sertif, idx) => (
                     <div
                         key={idx}
@@ -62,10 +64,13 @@ const About = () => {
                         <img
                             src={sertif.image_url}
                             alt={sertif.title}
-                            className="w-2/5 h-auto rounded-lg hover:scale-125 transition duration-300"
+                            className="w-2/5 h-auto rounded-lg hover:scale-150 transition duration-300 cursor-pointer"
+                            onClick={() =>
+                                window.open(sertif.image_url, "_blank")
+                            }
                         />
                         <div className="flex flex-col text-start max-w-80">
-                            <h2 className="text-xl font-semibold">
+                            <h2 className="text-xl font-bold">
                                 {sertif.title}
                             </h2>
                             <p className="text-base">{sertif.description}</p>

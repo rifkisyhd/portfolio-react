@@ -15,8 +15,8 @@ const sectionIds = [
 const menuConfig = {
     "/": [
         { href: "#tentang", label: "Tentang Saya" },
-        { href: "#kontak", label: "Kontak" },
         { href: "#project", label: "Project" },
+        { href: "#kontak", label: "Kontak" },
     ],
     "/portolp": [
         { href: "#fitur", label: "Fitur" },
@@ -43,6 +43,7 @@ const NavbarProject = () => {
     const [activeMenus, setActiveMenus] = useState(
         menuConfig[location.pathname] || [],
     );
+    const [activeSection, setActiveSection] = useState("");
 
     useEffect(() => {
         const filtered = (menuConfig[location.pathname] || []).filter(
@@ -53,6 +54,27 @@ const NavbarProject = () => {
         );
         setActiveMenus(filtered);
     }, [location.pathname]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            let current = "";
+            activeMenus.forEach((item) => {
+                const id = item.href.replace("#", "");
+                const section = document.getElementById(id);
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 350 && rect.bottom > 1) {
+                        current = id;
+                    }
+                }
+            });
+            setActiveSection(current);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [activeMenus]);
 
     return (
         <nav className="bg-[#101036] shadow fixed top-0 z-10 w-full h-20 flex items-center">
@@ -74,15 +96,23 @@ const NavbarProject = () => {
                 <ul
                     id="menu"
                     className="hidden md:flex md:space-x-4 flex-col md:flex-row absolute md:relative top-full left-0 w-full md:w-auto bg-[#101036] md:bg-transparent md:justify-end">
-                    {activeMenus.map((item, idx) => (
-                        <li className="py-2 md:py-0" key={idx}>
-                            <a
-                                href={item.href}
-                                className="block text-base text-white px-4 md:px-0">
-                                {item.label}
-                            </a>
-                        </li>
-                    ))}
+                    {activeMenus.map((item, idx) => {
+                        const id = item.href.replace("#", "");
+                        const isActive = activeSection === id;
+                        return (
+                            <li
+                                className="py-2 md:py-0 flex justify-center items-center"
+                                key={idx}>
+                                <a
+                                    href={item.href}
+                                    className={`block text-base px-4 md:px-0 transition-all duration-300 rounded-md
+            ${isActive ? "text-orange-500 font-semibold" : "text-white"}
+            hover:bg-orange-500 hover:text-white hover:px-6 hover:py-2 text-center`}>
+                                    {item.label}
+                                </a>
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
         </nav>
