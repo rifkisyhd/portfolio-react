@@ -1,58 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 
-const sectionIds = [
-    "fitur",
-    "wireframe",
-    "mockup",
-    "user-research",
-    "userflow",
-    "tentang",
-    "kontak",
-    "project",
+const defaultProjectMenus = [
+    { href: "#tentang", label: "Tentang Saya" },
+    { href: "#project", label: "Project" },
+    { href: "#kontak", label: "Kontak" },
+    { href: "#fitur", label: "Fitur" },
+    { href: "#user-research", label: "User Research" },
+    { href: "#userflow", label: "User Flow" },
+    { href: "#flowchart", label: "Flowchart" },
+    { href: "#design-system", label: "Design System" },
+    { href: "#wireframe", label: "Wireframe" },
+    { href: "#mockup", label: "Mockup" },
+    { href: "#prototype", label: "Prototype" },
 ];
-
-const menuConfig = {
-    "/": [
-        { href: "#tentang", label: "Tentang Saya" },
-        { href: "#project", label: "Project" },
-        { href: "#kontak", label: "Kontak" },
-    ],
-    "/portolp": [
-        { href: "#fitur", label: "Fitur" },
-        { href: "#user-research", label: "User Research" },
-        { href: "#userflow", label: "User Flow" },
-        { href: "#wireframe", label: "Wireframe" },
-        { href: "#flowchart", label: "Flowchart" },
-        { href: "#mockup", label: "Mockup" },
-    ],
-    "/kostio": [
-        { href: "#fitur", label: "Fitur" },
-        { href: "#user-research", label: "User Research" },
-        { href: "#userflow", label: "User Flow" },
-        { href: "#flowchart", label: "Flowchart" },
-        { href: "#wireframe", label: "Wireframe" },
-        { href: "#mockup", label: "Mockup" },
-    ],
-    // Tambahkan path lain sesuai kebutuhan
-};
 
 const NavbarProject = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [activeMenus, setActiveMenus] = useState(
-        menuConfig[location.pathname] || [],
-    );
+    const { slug } = useParams();
+    const [activeMenus, setActiveMenus] = useState([]);
     const [activeSection, setActiveSection] = useState("");
 
     useEffect(() => {
-        const filtered = (menuConfig[location.pathname] || []).filter(
-            (item) => {
+        // Jika path mengandung /project/:slug, pakai defaultProjectMenus
+        if (location.pathname.startsWith("/")) {
+            // Filter menu sesuai section yang ada di halaman
+            const filtered = defaultProjectMenus.filter((item) => {
                 const id = item.href.replace("#", "");
                 return document.getElementById(id) !== null;
-            },
-        );
-        setActiveMenus(filtered);
+            });
+            setActiveMenus(filtered);
+        } else {
+            // Untuk halaman lain, bisa pakai menuConfig lama
+            setActiveMenus([]);
+        }
     }, [location.pathname]);
 
     useEffect(() => {
@@ -103,13 +85,22 @@ const NavbarProject = () => {
                             <li
                                 className="py-2 md:py-0 flex justify-center items-center"
                                 key={idx}>
-                                <a
-                                    href={item.href}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const section =
+                                            document.getElementById(id);
+                                        if (section) {
+                                            section.scrollIntoView({
+                                                behavior: "smooth",
+                                            });
+                                        }
+                                    }}
                                     className={`block text-base px-4 md:px-0 transition-all duration-300 rounded-md
-            ${isActive ? "text-orange-500 font-semibold" : "text-white"}
-            hover:bg-orange-500 hover:text-white hover:px-6 hover:py-2 text-center`}>
+${isActive ? "text-orange-500 font-semibold" : "text-white"}
+hover:bg-orange-500 hover:text-white hover:px-6 hover:py-2 text-center`}>
                                     {item.label}
-                                </a>
+                                </button>
                             </li>
                         );
                     })}
