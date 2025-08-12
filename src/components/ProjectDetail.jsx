@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -9,6 +9,16 @@ const ProjectDetail = () => {
     const { slug } = useParams();
     const [project, setProject] = useState(null);
     const [detail, setDetail] = useState(null);
+    const [allProjects, setAllProjects] = useState([]);
+    const [nextDetailExists, setNextDetailExists] = useState(false);
+
+    // Cari next project (harus di atas useEffect)
+    const currentIdx = allProjects.findIndex((p) => p.slug === slug);
+    const nextProject = allProjects[currentIdx + 1];
+
+    // Cari previous project
+    const prevProject = allProjects[currentIdx - 1];
+    const [prevDetailExists, setPrevDetailExists] = useState(false);
 
     useEffect(() => {
         async function fetchProjectAndDetail() {
@@ -29,8 +39,50 @@ const ProjectDetail = () => {
                 if (!detailError) setDetail(detailData);
             }
         }
-        if (slug) fetchProjectAndDetail();
+        async function fetchAllProjects() {
+            const { data } = await supabase
+                .from("projects")
+                .select("slug,title,id")
+                .order("created_at", { ascending: true }); // urutkan sesuai kebutuhan
+            setAllProjects(data || []);
+        }
+        if (slug) {
+            fetchProjectAndDetail();
+            fetchAllProjects();
+        }
     }, [slug]);
+
+    useEffect(() => {
+        async function checkNextDetail() {
+            if (nextProject) {
+                const { data } = await supabase
+                    .from("project_details")
+                    .select("id")
+                    .eq("project_id", nextProject.id)
+                    .single();
+                setNextDetailExists(!!data);
+            } else {
+                setNextDetailExists(false);
+            }
+        }
+        checkNextDetail();
+    }, [nextProject]);
+
+    useEffect(() => {
+        async function checkPrevDetail() {
+            if (prevProject) {
+                const { data } = await supabase
+                    .from("project_details")
+                    .select("id")
+                    .eq("project_id", prevProject.id)
+                    .single();
+                setPrevDetailExists(!!data);
+            } else {
+                setPrevDetailExists(false);
+            }
+        }
+        checkPrevDetail();
+    }, [prevProject]);
 
     if (!project || !detail) {
         return (
@@ -249,6 +301,27 @@ const ProjectDetail = () => {
                             </div>
                         </section>
                     )}
+
+                    <div className="flex justify-between mt-8">
+                        <div>
+                            {prevProject && prevDetailExists && (
+                                <Link
+                                    to={`/${prevProject.slug}`}
+                                    className="bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600 transition">
+                                    Previous Project: {prevProject.title}
+                                </Link>
+                            )}
+                        </div>
+                        <div>
+                            {nextProject && nextDetailExists && (
+                                <Link
+                                    to={`/${nextProject.slug}`}
+                                    className="bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600 transition">
+                                    Next Project: {nextProject.title}
+                                </Link>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </section>
 
