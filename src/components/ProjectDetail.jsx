@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import LoadingLottie from "../components/Loading";
 
 const ProjectDetail = () => {
     const { slug } = useParams();
@@ -34,7 +35,7 @@ const ProjectDetail = () => {
     if (!project || !detail) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <span className="text-orange-500 text-xl">Coming Soon...</span>
+                <LoadingLottie />
             </div>
         );
     }
@@ -56,13 +57,13 @@ const ProjectDetail = () => {
                         />
                     </div>
 
-                    <section id="fitur">
-                        <h2 className="text-3xl font-semibold mb-4 text-center text-orange-500">
-                            Fitur Utama
-                        </h2>
-                        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12 mx-auto w-full md:w-3/4">
-                            {detail.fitur &&
-                                detail.fitur.map((fitur, idx) => (
+                    {detail.fitur && detail.fitur.length > 0 && (
+                        <section id="fitur">
+                            <h2 className="text-3xl font-semibold mb-4 text-center text-orange-500">
+                                Fitur Utama
+                            </h2>
+                            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12 mx-auto w-full md:w-3/4">
+                                {detail.fitur.map((fitur, idx) => (
                                     <div
                                         className="bg-white p-4 rounded-lg shadow-md transform hover:-translate-y-1 transition duration-300"
                                         key={idx}>
@@ -77,164 +78,177 @@ const ProjectDetail = () => {
                                         </p>
                                     </div>
                                 ))}
+                            </section>
                         </section>
-                    </section>
+                    )}
 
-                    <section id="user-research">
-                        <h2 className="text-3xl font-semibold mb-4 text-center text-orange-500">
-                            Ringkasan User Research
-                        </h2>
-                        <p className="text-base md:text-lg mb-12 text-center">
-                            {detail.user_research}
-                            {detail.user_research_link && (
-                                <>
-                                    {" "}
+                    {detail.user_research && (
+                        <section id="user-research">
+                            <h2 className="text-3xl font-semibold mb-4 text-center text-orange-500">
+                                Ringkasan User Research
+                            </h2>
+                            <p className="text-base md:text-lg mb-12 text-center">
+                                {detail.user_research}
+                                {detail.user_research_link && (
+                                    <>
+                                        {" "}
+                                        <a
+                                            className="text-blue-600 underline"
+                                            href={detail.user_research_link}
+                                            target="_blank"
+                                            rel="noopener noreferrer">
+                                            Detail hasil survey
+                                        </a>
+                                    </>
+                                )}
+                            </p>
+                        </section>
+                    )}
+
+                    {detail.flowchart && (
+                        <section id="flowchart">
+                            <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
+                                Flowchart
+                            </h2>
+                            <div className="flex flex-col items-center mb-12">
+                                <a
+                                    href={detail.flowchart}
+                                    target="_blank"
+                                    rel="noopener noreferrer">
+                                    <img
+                                        src={detail.flowchart}
+                                        alt="Flowchart"
+                                        className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
+                                    />
+                                </a>
+                                {detail.flowchart_link && (
                                     <a
-                                        className="text-blue-600 underline"
-                                        href={detail.user_research_link}
+                                        className="text-blue-600 underline mt-2"
+                                        href={detail.flowchart_link}
                                         target="_blank"
                                         rel="noopener noreferrer">
-                                        Detail hasil survey
+                                        Detail Flowchart
                                     </a>
-                                </>
-                            )}
-                        </p>
-                    </section>
+                                )}
+                            </div>
+                        </section>
+                    )}
 
-                    <section id="flowchart">
-                        <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
-                            Flowchart
-                        </h2>
-                        <div className="flex flex-col items-center mb-12">
-                            <a
-                                href={detail.flowchart}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                <img
-                                    src={detail.flowchart}
-                                    alt="Flowchart"
-                                    className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
-                                />
-                            </a>
-                            {detail.flowchart_link && (
+                    {detail.design_system && (
+                        <section id="design-system">
+                            <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
+                                Design System
+                            </h2>
+                            <div className="flex flex-col items-center mb-12">
                                 <a
-                                    className="text-blue-600 underline mt-2"
-                                    href={detail.flowchart_link}
+                                    href={detail.design_system}
                                     target="_blank"
                                     rel="noopener noreferrer">
-                                    Detail Flowchart
+                                    <img
+                                        src={detail.design_system}
+                                        alt="Design System"
+                                        className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
+                                    />
                                 </a>
-                            )}
-                        </div>
-                    </section>
+                                {detail.design_system_link && (
+                                    <a
+                                        className="text-blue-600 underline mt-2"
+                                        href={detail.design_system_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer">
+                                        Detail Design System
+                                    </a>
+                                )}
+                            </div>
+                        </section>
+                    )}
 
-                    <section id="design-system">
-                        <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
-                            Design System
-                        </h2>
-                        <div className="flex flex-col items-center mb-12">
-                            <a
-                                href={detail.design_system}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                <img
-                                    src={detail.design_system}
-                                    alt="Design System"
-                                    className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
-                                />
-                            </a>
-                            {detail.design_system_link && (
+                    {detail.wireframe && (
+                        <section id="wireframe">
+                            <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
+                                Wireframe
+                            </h2>
+                            <div className="flex flex-col items-center mb-12">
                                 <a
-                                    className="text-blue-600 underline mt-2"
-                                    href={detail.design_system_link}
+                                    href={detail.wireframe}
                                     target="_blank"
                                     rel="noopener noreferrer">
-                                    Detail Design System
+                                    <img
+                                        src={detail.wireframe}
+                                        alt="Wireframe"
+                                        className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
+                                    />
                                 </a>
-                            )}
-                        </div>
-                    </section>
+                                {detail.wireframe_link && (
+                                    <a
+                                        className="text-blue-600 underline mt-2"
+                                        href={detail.wireframe_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer">
+                                        Detail Wireframe
+                                    </a>
+                                )}
+                            </div>
+                        </section>
+                    )}
 
-                    <section id="wireframe">
-                        <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
-                            Wireframe
-                        </h2>
-                        <div className="flex flex-col items-center mb-12">
-                            <a
-                                href={detail.wireframe}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                <img
-                                    src={detail.wireframe}
-                                    alt="Wireframe"
-                                    className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
-                                />
-                            </a>
-                            {detail.wireframe_link && (
+                    {detail.mockup && (
+                        <section id="mockup">
+                            <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
+                                Mockup
+                            </h2>
+                            <div className="flex flex-col items-center mb-12">
                                 <a
-                                    className="text-blue-600 underline mt-2"
-                                    href={detail.wireframe_link}
+                                    href={detail.mockup}
                                     target="_blank"
                                     rel="noopener noreferrer">
-                                    Detail Wireframe
+                                    <img
+                                        src={detail.mockup}
+                                        alt="Mockup"
+                                        className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
+                                    />
                                 </a>
-                            )}
-                        </div>
-                    </section>
+                                {detail.mockup_link && (
+                                    <a
+                                        className="text-blue-600 underline mt-2"
+                                        href={detail.mockup_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer">
+                                        Detail Mockup
+                                    </a>
+                                )}
+                            </div>
+                        </section>
+                    )}
 
-                    <section id="mockup">
-                        <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
-                            Mockup
-                        </h2>
-                        <div className="flex flex-col items-center mb-12">
-                            <a
-                                href={detail.mockup}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                <img
-                                    src={detail.mockup}
-                                    alt="Mockup"
-                                    className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
-                                />
-                            </a>
-                            {detail.mockup_link && (
+                    {detail.prototype && (
+                        <section id="prototype">
+                            <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
+                                Prototype
+                            </h2>
+                            <div className="flex flex-col items-center mb-10">
                                 <a
-                                    className="text-blue-600 underline mt-2"
-                                    href={detail.mockup_link}
+                                    href={detail.prototype}
                                     target="_blank"
                                     rel="noopener noreferrer">
-                                    Detail Mockup
+                                    <img
+                                        src={detail.prototype}
+                                        alt="Prototype"
+                                        className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
+                                    />
                                 </a>
-                            )}
-                        </div>
-                    </section>
-
-                    <section id="prototype">
-                        <h2 className="text-3xl font-semibold my-4 text-center text-orange-500">
-                            Prototype
-                        </h2>
-                        <div className="flex flex-col items-center mb-10">
-                            <a
-                                href={detail.prototype}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                <img
-                                    src={detail.prototype}
-                                    alt="Prototype"
-                                    className="mx-auto w-full md:w-2/4 hover:scale-150 transition-transform duration-300"
-                                />
-                            </a>
-                            {detail.prototype_link && (
-                                <a
-                                    className="text-blue-600 underline mt-2"
-                                    href={detail.prototype_link}
-                                    target="_blank"
-                                    rel="noopener noreferrer">
-                                    Detail Prototype
-                                </a>
-                            )}
-                        </div>
-                    </section>
+                                {detail.prototype_link && (
+                                    <a
+                                        className="text-blue-600 underline mt-2"
+                                        href={detail.prototype_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer">
+                                        Detail Prototype
+                                    </a>
+                                )}
+                            </div>
+                        </section>
+                    )}
                 </div>
             </section>
 
