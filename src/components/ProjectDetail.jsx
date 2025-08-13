@@ -58,9 +58,9 @@ const ProjectDetail = () => {
                 const { data } = await supabase
                     .from("project_details")
                     .select("id")
-                    .eq("project_id", nextProject.id)
-                    .single();
-                setNextDetailExists(!!data);
+                    .eq("project_id", nextProject.id);
+
+                setNextDetailExists(data && data.length > 0);
             } else {
                 setNextDetailExists(false);
             }
@@ -74,9 +74,9 @@ const ProjectDetail = () => {
                 const { data } = await supabase
                     .from("project_details")
                     .select("id")
-                    .eq("project_id", prevProject.id)
-                    .single();
-                setPrevDetailExists(!!data);
+                    .eq("project_id", prevProject.id);
+
+                setPrevDetailExists(data && data.length > 0);
             } else {
                 setPrevDetailExists(false);
             }
@@ -108,6 +108,17 @@ const ProjectDetail = () => {
                             alt={project.title}
                         />
                     </div>
+
+                    {detail.description && (
+                        <section id="ringkasan-project">
+                            <h2 className="text-3xl font-semibold mb-4 text-center text-orange-500">
+                                Ringkasan Project
+                            </h2>
+                            <p className="text-base md:text-lg mb-12 text-center">
+                                {detail.description}
+                            </p>
+                        </section>
+                    )}
 
                     {detail.fitur && detail.fitur.length > 0 && (
                         <section id="fitur">
